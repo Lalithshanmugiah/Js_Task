@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group By Department if user age greater than 25</title>
+</head>
+<body>
+    <p id ='output'></p>
+
+    <script>
+
+        const users =[
+            { name: "Asha", age: 22, department: "Engineering" },
+            { name: "Ravi", age: 28, department: "Engineering" },
+            { name: "Meera", age: 26, department: "HR" },
+            { name: "Kiran", age: 24, department: "HR" },
+            { name: "Suresh", age: 30, department: "Finance" }
+        ];
+
+
+        let result ={};
+
+
+        for(let i =0; i < users.length; i++){
+            const user = users[i];
+
+
+            if(user.age >= 25){
+                if(!result[user.department]){
+                    result[user.department] =[];
+                }
+                result[user.department].push(user.name);
+            }
+        }
+        document.getElementById('output').textContent=JSON.stringify(result);
+
+
+
+    </script>
+    
+</body>
+</html>
