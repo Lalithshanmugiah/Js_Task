@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat_box</title>
+</head>
+<body>
+    <p id ='chat'></p>
+
+    <script>
+        const messages = [
+            { sender: "Alex", isPinned: false, isRead: true, timestamp: 1705300000000 },
+            { sender: "Ben", isPinned: true, isRead: true, timestamp: 1705400000000 },
+            { sender: "Cara", isPinned: false, isRead: false, timestamp: 1705500000000 },
+            { sender: "Dana", isPinned: true, isRead: false, timestamp: 1705200000000 }
+        ];
+
+
+        const sortmessage = (a,b) => {
+            if(a.isPinned !== b.isPinned){
+                return a.isPinned ? -1 : 1;
+            }
+            if(a.isRead !== b.isRead){
+                return a.isRead ? 1 : -1;
+            }
+            if(a.timestamp !== b.timestamp){
+                return b.timestamp - a.timestamp;
+            }
+            return a.sender.localeCompare(b.sender);
+        };
+        const sortedMessage =[...messages].sort(sortmessage);
+
+        console.log(sortedMessage)
+
+
+    </script>
+    
+</body>
+</html>
