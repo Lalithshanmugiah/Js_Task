@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing Page</title>
+</head>
+<body>
+    <p id ='sort'></p>
+<script>
+
+    const products = [
+        { name: "Phone", price: 20000, rating: 4.3, inStock: true, createdAt: "2025-01-10" },
+        { name: "Laptop", price: 55000, rating: 4.7, inStock: false, createdAt: "2025-01-15" },
+        { name: "Headphones", price: 3000, rating: 4.7, inStock: true, createdAt: "2025-01-05" },
+        { name: "Charger", price: 1000, rating: 4.2, inStock: true, createdAt: "2025-01-20" }
+    ];
+
+    const sortedproducts = [...products].sort((a, b) => {
+        if (a.instock !== b.instock) {
+            return b.instock - a.instock;
+        }
+        if (a.rating !== b.rating) {
+            return b.rating - a.rating;
+        }
+        if (a.price !== b.price) {
+            return a.price - b.price;
+        }
+        return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+    console.log(sortedproducts);
+
+
+</script>
+    
+</body>
+</html>
