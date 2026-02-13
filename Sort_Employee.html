@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sort Employees</title>
+</head>
+
+<body>
+    <script>
+
+        const status_priority = {
+            active: 1,
+            on_leave: 2,
+            inactive: 3
+        };
+
+
+        const employees = [
+            { name: "Riya", status: "active", experience: 3, lastActiveAt: 1705300000000 },
+            { name: "Arun", status: "inactive", experience: 8, lastActiveAt: 1705200000000 },
+            { name: "Mehul", status: "active", experience: 5, lastActiveAt: 1705400000000 },
+            { name: "Zara", status: "on_leave", experience: 6, lastActiveAt: 1705500000000 }
+        ];
+
+
+        const sortemployees = (a,b) => {
+            if (status_priority[a.status] !== status_priority[b.status]){
+                return status_priority[a.status] - status_priority[b.status]
+            }
+            if (a.experience !== b.experience){
+                return b.experience - a.experience;
+            }
+            if (a.lastActiveAt !== b.lastActiveAt){
+                return b.lastActiveAt - a.lastActiveAt;
+            }
+            return a.name.localeCompare(b.name);
+        };
+        const sortedemployees = [...employees].sort(sortemployees);
+
+        console.log(sortedemployees);
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
