@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API</title>
+</head>
+<body>
+
+    <button onclick="callAPI">CALL-API</button>
+
+    <script>
+
+        function createRequestGuard(fn){
+            let runningPromise = null;
+
+            return function (){
+
+
+                if(runningPromise){
+                    console.log("Returning Same Promises");
+                    return runningPromise;
+                }
+                runningPromise = fn()
+                .finally (()=>{
+                    runningPromise =null;
+                });
+                return runningPromise;
+            };
+        }
+
+        async function fakeApi() {
+            console.log("Api Started");
+            return new Promise((resolve)=>{
+                setTimeout(() => {
+                    
+                }, 1000);
+            });
+            
+        }
+
+        const guardFetch = createRequestGuard(fakeApi);
+
+        function callAPI(){
+            guardFetch().then(console.log);
+        }
+
+        guardFetch().then(console.log);
+        guardFetch().then(console.log);
+        guardFetch().then(console.log);
+
+
+    </script>
+    
+</body>
+</html>
