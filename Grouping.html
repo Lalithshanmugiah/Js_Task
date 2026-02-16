@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grouping & transforming</title>
+</head>
+
+<body>
+
+    <script>
+
+        const orders = [
+            { orderId: 1, userId: 'u1', amount: 200 },
+            { orderId: 2, userId: 'u2', amount: 300 },
+            { orderId: 3, userId: 'u1', amount: 150 },
+            { orderId: 4, userId: 'u3', amount: 500 },
+            { orderId: 5, userId: 'u2', amount: 100 },
+        ];
+
+        const result = orders.reduce((acc,order) => {
+            const {userId,amount,orderId} = order;
+
+            if(!acc[userId]){
+                acc[userId] = {
+                    totalAmount : amount,
+                    orders: []
+
+                };
+            }
+
+            acc[userId].totalAmount += amount;
+            acc[userId].orders.push[userId];
+
+            return acc;
+        },{});
+
+        console.log(result);
+
+
+    </script>
+
+</body>
+
+</html>
