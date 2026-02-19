@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Memoization with TTL</title>
+  </head>
+
+  <body>
+    <h2>Open Console to See Results</h2>
+
+    <script>
+      function memoizationWithTTL(fn, ttl) {
+        const cache = new Map();
+
+        return function (...args) {
+          const key = JSON.stringify(args);
+          const now = Date.now();
+
+          if (cache.has(key)) {
+            const { value, expiry } = cache.get(key);
+
+            if (now < expiry) {
+              console.log("cached");
+              return value;
+            }
+            cache.delete(key);
+          }
+          const result = fn.apply(this, args);
+
+          cache.set(key, {
+            value: result,
+            expiry: now + ttl,
+          });
+          return result;
+        };
+      }
+
+      const slowAdd = (a, b) => {
+        console.log("computing...");
+        return a + b;
+      };
+
+      const cacheAdd = memoizationWithTTL(slowAdd, 2000);
+
+      console.log(cacheAdd(2, 3));
+      console.log(cacheAdd(2, 3));
+
+      setTimeout(() => {
+        console.log(cacheAdd(2, 3));
+      }, 2100);
+    </script>
+  </body>
+</html>
