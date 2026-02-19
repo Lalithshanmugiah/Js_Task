@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Even Emitter</title>
+  </head>
+  <body>
+    <script>
+      function createEmitter() {
+        const events = {};
+
+        return {
+          on(event, callback) {
+            if (!events[event]) {
+              events[event] = [];
+            }
+            events[event].push(callback);
+            console.log("Listener added for:", event);
+          },
+
+          emit(event, data) {
+            if (!events[event] || events[event].length === 0) {
+              console.log("No listeners for:", event);
+              return;
+            }
+
+            console.log("Emitting event:", event);
+
+            events[event].forEach((callback) => {
+              callback(data);
+            });
+          },
+
+          off(event, callback) {
+            if (!events[event]) {
+              console.log("Nothing to remove for:", event);
+              return;
+            }
+
+            events[event] = events[event].filter((cb) => cb !== callback);
+            console.log("Listener removed for:", event);
+          },
+        };
+      }
+
+      console.log("Create emitter");
+      const emitter = createEmitter();
+
+      console.log("Create first listener");
+      const onLogin = (data) => {
+        console.log("User logged in:", data.userId);
+      };
+
+      console.log("Register first listener");
+      emitter.on("login", onLogin);
+
+      console.log("Emit event (42)");
+      emitter.emit("login", { userId: 42 });
+    </script>
+  </body>
+</html>
