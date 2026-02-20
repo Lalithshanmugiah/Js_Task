@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Multi Step Form</title>
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    body {
+      margin: 0%;
+      padding: auto;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      background: #f2f4f7;
+    }
+    .form-card {
+      width: 300px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: #808181;
+    }
+    #progressBar {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+    #progress {
+      height: 100%;
+      width: 33%;
+      background: #4caf50;
+      transition: width 0.3s ease;
+    }
+    #stepIndicator {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #4caf50;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #successScreen h3 {
+      text-align: center;
+    }
+
+    #finalSummary p {
+      margin: 6px 0;
+    }
+  </style>
+  </head>
+
+  <body>
+    <div class="form-card">
+      <div id="progressBar">
+        <div id="progress"></div>
+      </div>
+
+      <h3 id="stepIndicator">Step 1 of 3</h3>
+
+      <!-- STEP 1 -->
+      <div id="step1">
+        <input id="name" placeholder="Name" />
+        <div id="nameError" class="error"></div>
+
+        <input id="email" placeholder="Email" />
+        <div id="emailError" class="error"></div>
+
+        <div class="buttons">
+          <div></div>
+          <button onclick="nextStep()">Next</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="step2" style="display:none">
+        <input id="city" placeholder="City" />
+        <div id="cityError" class="error"></div>
+
+        <input id="state" placeholder="State" />
+        <div id="stateError" class="error"></div>
+
+        <div class="buttons">
+          <button onclick="prevStep()">Back</button>
+          <button onclick="nextStep()">Next</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div id="step3" style="display:none">
+        <div id="summary"></div>
+
+        <div class="buttons">
+          <button onclick="prevStep()">Back</button>
+          <button onclick="submitForm()">Submit</button>
+        </div>
+      </div>
+
+      <!-- SUCCESS SCREEN -->
+      <div id="successScreen" style="display:none">
+        <h3>Form Submitted Successfully 🎉</h3>
+        <div id="finalSummary"></div>
+
+        <div class="buttons" style="justify-content:center">
+          <button onclick="editForm()">Edit</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentStep = 1;
+      let isSubmitted = false;
+
+      function showStep(step) {
+        const steps = ["step1", "step2", "step3"];
+
+        steps.forEach((id) => {
+          document.getElementById(id).style.display = "none";
+        });
+
+        document.getElementById("successScreen").style.display = "none";
+
+        if (isSubmitted) {
+          document.getElementById("progressBar").style.display = "none";
+          document.getElementById("stepIndicator").style.display = "none";
+          document.getElementById("successScreen").style.display = "block";
+          return;
+        }
+
+        document.getElementById("progressBar").style.display = "block";
+        document.getElementById("stepIndicator").style.display = "block";
+
+        document.getElementById("step" + step).style.display = "block";
+
+        document.getElementById("stepIndicator").innerText =
+          "Step" + step + " of 3";
+
+        document.getElementById("progress").style.width =
+          (step / 3) * 100 + "%";
+      }
+
+      function validateStep1() {
+        let valid = true;
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        document.getElementById("nameError").innerText = "";
+        document.getElementById("emailError").innerText = "";
+
+        if (name.length < 3) {
+          document.getElementById("nameError").innerText =
+            " Name Must Be at least 3 Characters";
+          valid = false;
+        }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+          document.getElementById("emailError").innerText =
+            "Invalid Email Format";
+          valid = false;
+        }
+        return valid;
+      }
+
+      function validateStep2() {
+        let valid = true;
+
+        const city = document.getElementById("city").value.trim();
+        const state = document.getElementById("state").value.trim();
+
+        document.getElementById("cityError").innerText = "";
+        document.getElementById("stateError").innerText = "";
+
+        if (!city) {
+          document.getElementById("cityError").innerText = "city required";
+          valid = false;
+        }
+
+        if (!state) {
+          document.getElementById("stateError").innerText = "state required";
+          valid = false;
+        }
+        return valid;
+      }
+
+      function nextStep() {
+        if (currentStep === 1 && !validateStep1()) return;
+        if (currentStep === 2 && !validateStep2()) return;
+
+        currentStep++;
+        showStep(currentStep);
+
+        if (currentStep === 3) {
+          showSummary();
+        }
+      }
+
+      function prevStep() {
+        currentStep--;
+        showStep(currentStep);
+      }
+
+      function showSummary() {
+        document.getElementById("summary").innerHTML = `
+      <p><strong>Name:</strong> ${document.getElementById("name").value}</p>
+      <p><strong>Email:</strong> ${document.getElementById("email").value}</p>
+      <p><strong>City:</strong> ${document.getElementById("city").value}</p>
+      <p><strong>State:</strong> ${document.getElementById("state").value}</p>
+      `;
+      }
+
+  function submitForm() {
+    isSubmitted = true;
+
+    document.getElementById("finalSummary").innerHTML = `
+      <p><strong>Name:</strong> ${document.getElementById("name").value}</p>
+      <p><strong>Email:</strong> ${document.getElementById("email").value}</p>
+      <p><strong>City:</strong> ${document.getElementById("city").value}</p>
+      <p><strong>State:</strong> ${document.getElementById("state").value}</p>
+    `;
+
+    showStep(currentStep);
+  }
+
+      function editForm() {
+        isSubmitted = false;
+        currentStep = 1;
+        showStep(currentStep);
+      }
+    </script>
+  </body>
+</html>
