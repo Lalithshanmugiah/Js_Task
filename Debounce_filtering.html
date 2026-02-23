@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filtering Products</title>
+</head>
+<style>
+  h2 {
+    margin-bottom: 15px;
+  }
+
+  input,
+  select,
+  button {
+    padding: 8px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+</style>
+
+<body>
+
+  <input id="search" placeholder="search">
+  <select id="filter">
+    <option value="All">All</option>
+  </select>
+  <button id='sort'>Sort : None</button>
+
+  <p id='count'></p>
+  <ul id="list"></ul>
+
+  <script>
+    const products = [
+      { id: 1, name: "Laptop", price: 50000, category: "Electronics" },
+      { id: 2, name: "Shoes", price: 2000, category: "Fashion" },
+      { id: 3, name: "Phone", price: 30000, category: "Electronics" },
+      { id: 4, name: "T-Shirt", price: 800, category: "Fashion" }
+    ];
+
+
+    const search = document.getElementById('search');
+    const filter = document.getElementById('filter');
+    const sortbtn = document.getElementById('sort');
+    const count = document.getElementById('count');
+    const list = document.getElementById('list');
+
+
+    let searchText = "";
+    let category = "All";
+    let sortState = 0;
+
+
+    [...new Set(products.map(p => p.category))]
+      .forEach(c => filter.innerHTML += `<Option>${c}</Option>`);
+
+    // Debounce Function
+
+    function debounce(fn, delay) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), delay);
+
+      };
+    }
+
+    // main function
+
+    function update() {
+      let result = [...products];
+
+      if (searchText)
+        result = result.filter(p =>
+          p.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+      if (category !== 'All')
+        result = result.filter(p => p.category === category);
+
+      if (sortState === 1)
+        result.sort((a, b) => a.price - b.price);
+      else if (sortState === 2)
+        result.sort((a, b) => b.price - a.price);
+
+      list.innerHTML = result.length
+        ? result.map(p =>
+          `<li>${p.name} - ₹${p.price} - ${p.category}</li>`
+        ).join("")
+        : "<li>No results found</li>";
+
+      count.textContent = "Total: " + result.length;
+    }
+
+    // Event Listener 
+
+    search.addEventListener("input",
+      debounce(e => {
+        searchText = e.target.value;
+        update();
+      }, 300)
+    );
+
+    filter.addEventListener("change", e => {
+      category = e.target.value;
+      update();
+    });
+
+    sortbtn.addEventListener("click", () => {
+      sortState = (sortState + 1) % 3;
+      sortbtn.textContent = sortState === 0 ? "sort: None" : sortState === 1 ? "Sort: Low → High" : "Sort: High → Low";
+      update();
+    });
+
+    update();
+
+  </script>
+
+</body>
+
+</html>
