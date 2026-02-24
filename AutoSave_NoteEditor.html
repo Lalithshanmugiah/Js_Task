@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Save Note-Editor</title>
+</head>
+
+<body>
+    <h3>Auto Save Note Editor</h3>
+    <textarea id="editor" placeholder="startTyping.."></textarea>
+    <p id='status'></p>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const status = document.getElementById('status');
+
+        let debounceTimer = null;
+        let saveVersion = 0;
+
+
+        editor.addEventListener("input", () => {
+            status.textContent = "typing..";
+
+
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(() => {
+                startSaving(editor.value);
+            }, 1000);
+
+
+        });
+
+
+        function startSaving(content) {
+            status.textContent = 'saving..';
+
+
+            const currentVersion = ++saveVersion;
+
+            setTimeout(() => {
+
+                if (currentVersion === saveVersion) {
+                    status.textContent = 'saved';
+                }
+
+            }, 1000);
+
+
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>
