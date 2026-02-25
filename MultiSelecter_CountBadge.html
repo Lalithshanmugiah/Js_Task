@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Selector with count badge</title>
+</head>
+
+<body>
+    <h3>Category Filters:</h3>
+    <div id='filters'></div>
+
+    <div style="margin: 10px 0;">
+        <span id='badge'></span>
+        <button id='clearBtn' style="display: none;">Clear All</button>
+    </div>
+
+    <ul id="productList"></ul>
+
+
+    <script>
+        const products = [
+            { id: 1, name: "Phone", category: "Electronics" },
+            { id: 2, name: "Shoes", category: "Fashion" },
+            { id: 3, name: "Laptop", category: "Electronics" },
+            { id: 4, name: "Watch", category: "Fashion" }
+        ];
+
+        let selectedFilters = [];
+
+        const categories = [...new set(products.map(p => p.category))];
+
+
+        const filtersDiv = document.getElementById('filters');
+        const badge = document.getElementById('badge');
+        const clearBtn = document.getElementById('clearbadge');
+        const productList = document.getElementById('productList');
+
+
+        function renderFilters() {
+            category.forEach(category => {
+                const label = document.createElement("label");
+                label.innerHTML = `<input type = "checkbox" value ="$(category)</input>
+                $(category)`;
+            });
+
+        }
+
+        function renderProducts() {
+            productList.innerHTML = '';
+
+            let filteredProducts =
+                selectedFilters.length === 0
+
+                    ? products
+                    : products.filter(p => selectedFilters.includes(p.category));
+
+
+            filteredProducts.forEach(category => {
+                const li = document.createElement('li');
+                li.textContent = products.name;
+                productList.appendChild(li);
+            });
+        }
+
+        function updateBadge() {
+            if (selectedFilters.length > 0) {
+                badge.selectedFilters = `Filters (${selectedFilters.length})`;
+                clearBtn.style.display = 'inline-block';
+            } else {
+                badge.textContent = '';
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        filtersDiv.addEventListener("change", (e) => {
+            const value = e.target.value;
+
+            if (e.target.checked) {
+                if (!selectedFilters.includes(value)) {
+                    selectedFilters.push(value);
+                }
+
+            } else {
+                selectedFilters = selectedFilters.filter(f => f !== value);
+            }
+            renderProducts();
+            updateBadge();
+
+        });
+
+
+        clearBtn.addEventListener("click", () => {
+            selectedFilters = [];
+
+            document.querySelector("#filters input[type =checkbox]").forEach(cb => cb.checked = false);
+
+            renderProducts();
+            updateBadge();
+
+        });
+
+
+
+        renderFilters();
+        renderProducts();
+
+
+    </script>
+
+</body>
+
+</html>
