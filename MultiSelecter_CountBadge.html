@@ -27,53 +27,59 @@
             { id: 4, name: "Watch", category: "Fashion" }
         ];
 
+        
         let selectedFilters = [];
 
-        const categories = [...new set(products.map(p => p.category))];
+       
+        const categories = [...new Set(products.map(p => p.category))];
+
+        const filtersDiv = document.getElementById("filters");
+        const productList = document.getElementById("productList");
+        const badge = document.getElementById("badge");
+        const clearBtn = document.getElementById("clearBtn");
 
 
-        const filtersDiv = document.getElementById('filters');
-        const badge = document.getElementById('badge');
-        const clearBtn = document.getElementById('clearbadge');
-        const productList = document.getElementById('productList');
-
-
+        
         function renderFilters() {
-            category.forEach(category => {
+            categories.forEach(category => {
                 const label = document.createElement("label");
-                label.innerHTML = `<input type = "checkbox" value ="$(category)</input>
-                $(category)`;
+                label.innerHTML = `
+      <input type="checkbox" value="${category}" />
+      ${category}
+    `;
+                filtersDiv.appendChild(label);
             });
-
         }
 
+
         function renderProducts() {
-            productList.innerHTML = '';
+            productList.innerHTML = "";
 
             let filteredProducts =
                 selectedFilters.length === 0
-
                     ? products
                     : products.filter(p => selectedFilters.includes(p.category));
 
-
-            filteredProducts.forEach(category => {
-                const li = document.createElement('li');
-                li.textContent = products.name;
+            filteredProducts.forEach(product => {
+                const li = document.createElement("li");
+                li.textContent = product.name;
                 productList.appendChild(li);
             });
         }
 
+
         function updateBadge() {
             if (selectedFilters.length > 0) {
-                badge.selectedFilters = `Filters (${selectedFilters.length})`;
-                clearBtn.style.display = 'inline-block';
+                badge.textContent = `Filters (${selectedFilters.length})`;
+                clearBtn.style.display = "inline-block";
             } else {
-                badge.textContent = '';
-                clearBtn.style.display = 'none';
+                badge.textContent = "";
+                clearBtn.style.display = "none";
             }
         }
 
+
+       
         filtersDiv.addEventListener("change", (e) => {
             const value = e.target.value;
 
@@ -81,30 +87,32 @@
                 if (!selectedFilters.includes(value)) {
                     selectedFilters.push(value);
                 }
-
             } else {
                 selectedFilters = selectedFilters.filter(f => f !== value);
             }
+
             renderProducts();
             updateBadge();
-
         });
 
 
+       
         clearBtn.addEventListener("click", () => {
             selectedFilters = [];
 
-            document.querySelector("#filters input[type =checkbox]").forEach(cb => cb.checked = false);
+            document
+                .querySelectorAll("#filters input[type='checkbox']")
+                .forEach(cb => cb.checked = false);
 
             renderProducts();
             updateBadge();
-
         });
 
 
-
+       
         renderFilters();
         renderProducts();
+
 
 
     </script>
